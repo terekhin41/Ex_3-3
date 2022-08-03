@@ -76,6 +76,8 @@ object ChatService {
         )
         messages.values
             .also { if (it.isEmpty()) println("Нет сообщений") }
+            .asSequence()
+            .take(10)
             .forEach {
                 it.isRead = true
                 println(it)
