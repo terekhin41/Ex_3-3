@@ -2,6 +2,7 @@ import java.util.*
 import kotlin.collections.LinkedHashMap
 
 object ChatService {
+    private const val OUTPUT_MESSAGES_COUNT = 5
     private var messageId : Int = 0
     private var messagesStorage = hashMapOf<Int, Chat.Message>()
     var persons = LinkedHashMap<Int, LinkedHashMap<Int, Chat>>()
@@ -21,7 +22,9 @@ object ChatService {
         println("\nЧаты пользователя id = $person:")
         val sortedChatList = persons[person]?.values?.sortedWith(ChatComparator) ?: emptyList()
         if (sortedChatList.isEmpty()) println("Создайте чат, чтобы начать общение")
-        else sortedChatList.forEach { println(it) }
+        else sortedChatList
+            .take(5)
+            .forEach { println(it) }
         return sortedChatList
     }
 
@@ -54,7 +57,8 @@ object ChatService {
     }
 
     fun getUnreadChatsCount(person: Int) : Int {
-        return persons[person]?.values
+        return persons[person]
+            ?.values
             ?.fold(0) {
                     sum, element -> sum + if (element.numberOfUnReadMessages > 0) 1 else 0
             } ?: 0
